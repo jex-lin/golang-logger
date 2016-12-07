@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 	"path"
 	"runtime"
 	"strings"
@@ -23,8 +24,8 @@ const (
 
 type Log struct {
 	Logger  *log.Logger
-	Level   Level
-	Trigger struct {
+	Level   Level    // Filter level
+	Trigger struct { // Trigger func when level reached.
 		Level Level
 		Do    func()
 	}
@@ -42,13 +43,26 @@ func New(out io.Writer) *Log {
 	return &Log{Logger: logger}
 }
 
-func (t *Log) SetLevel(str string) {
-	t.Level = StrToLevel(str)
+// New and create log file
+func NewLogFile(filename string) *Log {
+	f, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_RDWR, 0666)
+	if err != nil {
+		fmt.Println("Failed to create log file, error:", err)
+		os.Exit(1)
+	}
+	logger := log.New(f, "", 0)
+	return &Log{Logger: logger}
 }
 
-func (t *Log) SetTrigger(str string, do func()) {
-	t.Trigger.Level = StrToLevel(str)
-	t.Trigger.Do = do
+func (l *Log) SetLevel(str string) *Log {
+	l.Level = StrToLevel(str)
+	return l
+}
+
+func (l *Log) SetTrigger(str string, do func()) *Log {
+	l.Trigger.Level = StrToLevel(str)
+	l.Trigger.Do = do
+	return l
 }
 
 func (l *Log) Debug(v ...interface{}) {

@@ -38,8 +38,7 @@ output :
 
 ### Set Level
 
-    var log = logger.New(os.Stdout)
-    log.SetLevel("notice")
+    var log = logger.New(os.Stdout).SetLevel("notice")
     log.Debug("debug") // won't print
     log.Info("info")   // won't print
     log.Notice("notice")
@@ -58,8 +57,7 @@ output :
 ### Set trigger
 
     func main() {
-        var log = logger.New(os.Stdout)
-        log.SetTrigger("critical", do)
+        var log = logger.New(os.Stdout).SetTrigger("critical", do)
         log.Warn("warn")
         log.Error("error")
         log.Critical("critical")
@@ -83,11 +81,7 @@ output :
 
 File
 
-    f, err := os.OpenFile("dev.log", os.O_APPEND|os.O_CREATE|os.O_RDWR, 0666)
-    if err != nil {
-      log.Printf("Create log file error: %v", err)
-    }
-    var log = logger.New(f)
+    var log = logger.NewLogFile("dev.log")
 
 Standard output
 
@@ -97,7 +91,6 @@ Buffer
 
     var buf bytes.Buffer
     var log = logger.New(&buf)
-
 
 
 

@@ -138,7 +138,7 @@ func (l *Log) FormatPrint(level Level, info *CallInfo, v ...interface{}) {
 		l.Logger.Println(str, v[0])
 	}
 
-	// Trigger Do (if exists) by specific level
+	// Trigger Do (if existed) by specific level
 	if level >= l.Trigger.Level && l.Trigger.Do != nil {
 		l.Trigger.Do()
 	}
@@ -159,7 +159,7 @@ func LevelToStr(level Level) string {
 	case CRITICAL:
 		return "Critical"
 	default:
-		return ""
+		return "Unknown"
 	}
 }
 
@@ -178,7 +178,7 @@ func StrToLevel(str string) Level {
 	case "critical":
 		return CRITICAL
 	default:
-		return 100 // To make level not bigger than LevelCritical which is 0.
+		return 100 // Return a big number to make level not triggered.
 	}
 }
 
